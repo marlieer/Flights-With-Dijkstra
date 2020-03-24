@@ -14,6 +14,7 @@ public class JProto1 {
 		Node nodeD = new Node(4); 
 		Node nodeE = new Node(5);
 		Node nodeF = new Node(6);
+		Node nodeG = new Node(7);
 		 
 		// add edges between nodes with cost and duration
 		nodeA.addDestination(nodeB, 10, 12);
@@ -38,24 +39,33 @@ public class JProto1 {
 		graph.addNode(nodeD);
 		graph.addNode(nodeE);
 		graph.addNode(nodeF);
+		graph.addNode(nodeG);
 		
-		// run Dijkstra's on source nodeA
-		graph = calculateShortestPathFromSource(graph, nodeA);
+		// run Dijkstra's on source nodeA with dest nodeG
+		Node src = nodeA;
+		Node dest = nodeF;
+		List<Node> shortestPath = calculateShortestPathFromSource(graph, src, dest);
 		
-		// retrieve shortest cost path from A to F
-		List<Node> shortestPathToF = nodeF.getShortestPath();
 		
-		// print airport ID and cost for each node along the way to F
-		for (int i=0; i<shortestPathToF.size(); i++) {
-			System.out.println("Step " + i + " - " + shortestPathToF.get(i).getAirportID() + ": " + shortestPathToF.get(i).getCost());
+		if (shortestPath != null) {
+			
+			// print airport ID and cost for each node along the way to F
+			int i=0;
+			for (i=0; i<shortestPath.size(); i++) {
+				System.out.println("Step " + (i+1) + " - " + shortestPath.get(i).getAirportID() + ": " + shortestPath.get(i).getCost());
+			}
+			System.out.println("Step " + (i+1) + " - " + dest.getAirportID() + ": " + dest.getCost());
+			System.out.println("Total Cost: " + dest.getCost());
 		}
 		
-		System.out.println("Total Cost to F: " + nodeF.getCost());
+		else {
+			System.out.println("No shortest path found");
+		}
 		
 
 	}
 	
-	public static Graph calculateShortestPathFromSource(Graph graph, Node source) 
+	public static List<Node> calculateShortestPathFromSource(Graph graph, Node source, Node dest) 
 	{
 	    source.setCost(0);
 	 
@@ -77,8 +87,15 @@ public class JProto1 {
 	            }
 	        }
 	        settledNodes.add(currentNode);
+	        
+	        // if the node added is the destination node, return
+	        if (currentNode == dest) {
+	        	return currentNode.getShortestPath();
+	        }
 	    }
-	    return graph;
+	    
+	    // if the algorithm never adds the destination node, return null. There is no path to the destination
+	    return null;
 	}
 	
 	
