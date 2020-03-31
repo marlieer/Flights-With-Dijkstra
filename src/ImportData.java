@@ -1,5 +1,6 @@
 import java.time.Duration;
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,14 +11,14 @@ import java.io.IOException;
 public class ImportData {
 
 	// attributes
-	private Integer [] originAirportIDs;
-	private Integer [] destAirportIDs;
-	private LocalDateTime [] departureTimes;
-	private LocalDateTime [] arrivalTimes;
-	private double [] costs;
-	private Duration [] durations;
-	private String[] originAirportCity;
-	private String[] destAirportCity;
+	private ArrayList<Integer> originAirportIDs;
+	private ArrayList<Integer> destAirportIDs;
+	private ArrayList<LocalDateTime> departureTimes; 
+	private ArrayList<LocalDateTime> arrivalTimes;
+	private ArrayList<Double> costs;
+	private ArrayList<Duration> durations;
+	private ArrayList<String> originAirportCity;
+	private ArrayList<String> destAirportCity;
 	
 	/*
 	Resources referenced: 
@@ -27,17 +28,27 @@ public class ImportData {
 	
 	public static void main(String[] args) {
 		ImportData data = new ImportData("flight_data.csv");
+		System.out.println("Finished reading in data");
 		for (int j = 0; j < 10; j++) {
 			
     		System.out.printf("originAirportID %d, destAirportID %d, departureTimes %s, arrivalTimes %s, costs %f, duration %s, originAirportCity %s, destAirportCity %s \n", 
-    				data.originAirportIDs[j], data.destAirportIDs[j], data.departureTimes[j], data.arrivalTimes[j], 
-    				data.costs[j], data.durations[j], data.originAirportCity[j], data.destAirportCity[j]);
+    				data.originAirportIDs.get(j), data.destAirportIDs.get(j), data.departureTimes.get(j), data.arrivalTimes.get(j), 
+    				data.costs.get(j), data.durations.get(j), data.originAirportCity.get(j), data.destAirportCity.get(j));
 			
 		}
 	}
 	
 	// constructor
 	public ImportData(String filepath) {
+		originAirportIDs = new ArrayList<Integer>();
+		destAirportIDs = new ArrayList<Integer>();
+		departureTimes = new ArrayList<LocalDateTime>();
+		arrivalTimes = new ArrayList<LocalDateTime>();
+		costs = new ArrayList<Double>();
+		durations = new ArrayList<Duration>();
+		originAirportCity = new ArrayList<String>();
+		destAirportCity = new ArrayList<String>();
+		 
 		 String csvFile = filepath;
 		 BufferedReader br = null;
 	     String line = "";
@@ -66,23 +77,16 @@ public class ImportData {
             		 * values[14] is the cost
             		 */
             		
-            		
-            		System.out.printf("year %s, month %s, day %2s, originAirportID %s, originAirportCity %-10s, originAirportState %s" 
-            		+ " destAirportID %s, destAirportCity %-10s, destAirportState %s, dep_hour %s, dep_min %s, arr_hour %s, arr_min %s, distance %s, cost %s\n", 
-            		values[0], values[1], values[2], values[3], values[4].substring(1), values[5].substring(0,values[5].length()-1), values[6], 
-            		values[7].substring(1), values[8].substring(0,values[8].length()-1), values[9], values[10], values[11], values[12], values[13], values[14]);
-					
-            		
-            		originAirportIDs[i] = Integer.parseInt(values[3].trim());
-            		destAirportIDs[i] = Integer.parseInt(values[6]);
-            		departureTimes[i] = LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-            				Integer.parseInt(values[2]), Integer.parseInt(values[9]), Integer.parseInt(values[10]));
-            		arrivalTimes[i] = departureTimes[i].withHour(Integer.parseInt(values[11])); // arrival Date is the same as departure date, so just change the hour and minute
-            		arrivalTimes[i] = arrivalTimes[i].withMinute(Integer.parseInt(values[12]));
-            		costs[i] = Double.parseDouble(values[14]);
-            		durations[i] = Duration.between(departureTimes[i], arrivalTimes[i]);
-            		originAirportCity[i] = values[4].substring(1) + ", " + values[5].substring(0,values[5].length()-1); // There were some extra " " in the csv file, so had to get rid of those
-            		destAirportCity[i] = values[7].substring(1) + ", " + values[8].substring(0,values[8].length()-1); 
+            		originAirportIDs.add(Integer.parseInt(values[3].trim()));
+            		destAirportIDs.add(Integer.parseInt(values[6]));
+            		departureTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
+            				Integer.parseInt(values[2]), Integer.parseInt(values[9]), Integer.parseInt(values[10])));
+            		LocalDateTime arr = departureTimes.get(i).withHour(Integer.parseInt(values[11])); // arrival Date is the same as departure date, so just change the hour and minute
+            		arrivalTimes.add(arr.withMinute(Integer.parseInt(values[12])));
+            		costs.add(Double.parseDouble(values[14]));
+            		durations.add(Duration.between(departureTimes.get(i), arrivalTimes.get(i)));
+            		originAirportCity.add(values[4].substring(1) + ", " + values[5].substring(0,values[5].length()-1)); // There were some extra " " in the csv file, so had to get rid of those
+            		destAirportCity.add(values[7].substring(1) + ", " + values[8].substring(0,values[8].length()-1)); 
             		/*
             		System.out.printf("year %s, month %s, day %2s, originAirportID %s, originAirportCity %-10s, originAirportState %s" 
             		+ " destAirportID %s, destAirportCity %-10s, destAirportState %s, dep_hour %s, dep_min %s, arr_hour %s, arr_min %s, distance %s, cost %s\n", 
@@ -122,50 +126,6 @@ public class ImportData {
 	
 	
 	// getters and setters
-	public double [] getCosts() {
-		return this.costs;
-	}
-
-
-	public Duration [] getDurations() {
-		return durations;
-	}
-
-
-	public LocalDateTime [] getArrivalTimes() {
-		return arrivalTimes;
-	}
-
-
-	public Integer [] getOriginAirportIDs() {
-		return originAirportIDs;
-	}
-
-
-	public Integer [] getDestAirportIDs() {
-		return destAirportIDs;
-	}
-
-
-	public LocalDateTime [] getDepartureTimes() {
-		return departureTimes;
-	}
-
-	public String[] getOriginAirportCity() {
-		return originAirportCity;
-	}
-
-	public void setOriginAirportCity(String[] originAirportCity) {
-		this.originAirportCity = originAirportCity;
-	}
-
-	public String[] getDestAirportCity() {
-		return destAirportCity;
-	}
-
-	public void setDestAirportCity(String[] destAirportCity) {
-		this.destAirportCity = destAirportCity;
-	}
-
-
+	
 }
+	
