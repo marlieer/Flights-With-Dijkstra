@@ -1,3 +1,4 @@
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class ImportData {
 	public static void main(String[] args) {
 		ImportData data = new ImportData("flight_data.csv");
 		System.out.println("Finished reading in data");
+		System.out.println ("\nFirst 10 lines: ");
 		for (int j = 0; j < 10; j++) {
 			
     		System.out.printf("originAirportID %d, destAirportID %d, departureTimes %s, arrivalTimes %s, costs %f, duration %s, originAirportCity %s, destAirportCity %s \n", 
@@ -57,7 +59,7 @@ public class ImportData {
 	     try {
 
 	            br = new BufferedReader(new FileReader(csvFile));
-	            System.out.println(br.readLine()); // Skip the first line because it's just headers
+	            br.readLine(); // Skip the first line because it's just headers
 	            int i = 0;
 	            while ((line = br.readLine()) != null) {
 	            		
@@ -76,24 +78,51 @@ public class ImportData {
             		 * values[13] is the distance
             		 * values[14] is the cost
             		 */
-            		if (i % 10000 == 0) { 
-            			System.out.println("reading line " + i);
-            			
+            		
+            		 /*
+            		 * For the departure hour and arrival hour, the only valid values for HourOfDay is 0 - 23. However
+            		 * our data contains values of 24. So we set the hour to zero, and change the day to the next day.
+            		 * This is for values[9] and values[11]
+            		 */
+            		int depHour = Integer.parseInt(values[9]);
+            		int depDay = Integer.parseInt(values[2]);
+            		if (depHour == 24) {
+            			depHour = 0;
+            			depDay += 1;
             		}
+            		int arrHour = Integer.parseInt(values[11]);
+            		int arrDay = depDay;
+            		if (arrHour == 24) {
+            			arrHour = 0;
+            			arrDay += 1;
+            		}
+            		/*
+            		 * Now since we increased the day by one, we need to make sure that the date isn't invalid
+            		 * If it is invalid, we will just skip this entry.
+            		 */
+            		try {
+            			LocalDateTime.of(2019,1,depDay,0,0);
+            			LocalDateTime.of(2019,1,arrDay,0,0);
+            		} catch (DateTimeException e) {
+            			e.printStackTrace();
+            			System.out.println("Day error on line: " + i);
+            			continue;
+            		}
+            		
             		try {
 	            		originAirportIDs.add(Integer.parseInt(values[3].trim()));
 	            		destAirportIDs.add(Integer.parseInt(values[6]));
 	            		departureTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-	            				Integer.parseInt(values[2]), Integer.parseInt(values[9]), Integer.parseInt(values[10])));
+	            				depDay, depHour, Integer.parseInt(values[10])));
 	            		arrivalTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-	            				Integer.parseInt(values[2]), Integer.parseInt(values[11]), Integer.parseInt(values[12])));
+	            				arrDay, arrHour, Integer.parseInt(values[12])));
 	            		costs.add(Double.parseDouble(values[14]));
 	            		durations.add(Duration.between(departureTimes.get(i), arrivalTimes.get(i)));
 	            		originAirportCity.add(values[4].substring(1) + ", " + values[5].substring(0,values[5].length()-1)); // There were some extra " " in the csv file, so had to get rid of those
 	            		destAirportCity.add(values[7].substring(1) + ", " + values[8].substring(0,values[8].length()-1)); 
             		} catch (Exception e){
             			e.printStackTrace();
-            			System.out.println("Found error " + values[9] + " " + values[10]);
+            			System.out.println("Found error " + values[11] + " " + values[12] + " line: " + i);
             			break;
             		}
 	            	/*
@@ -103,8 +132,6 @@ public class ImportData {
             		values[7].substring(1), values[8].substring(0,values[8].length()-1), values[9], values[10], values[11], values[12], values[13], values[14]);
 					*/
             		i++;
-            		
-            		if (i > 583984) break; // We don't have more than 583985 lines of data
 	            }
 
 	        } catch (FileNotFoundException e) {
@@ -132,10 +159,7 @@ public class ImportData {
 //		
 //		String [] deptDates = new String [] {"2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01"};
 	}
-	
-	
-	
-	// getters and setters
+
 	
 }
 	
