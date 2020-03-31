@@ -76,25 +76,35 @@ public class ImportData {
             		 * values[13] is the distance
             		 * values[14] is the cost
             		 */
-            		
-            		originAirportIDs.add(Integer.parseInt(values[3].trim()));
-            		destAirportIDs.add(Integer.parseInt(values[6]));
-            		departureTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
-            				Integer.parseInt(values[2]), Integer.parseInt(values[9]), Integer.parseInt(values[10])));
-            		LocalDateTime arr = departureTimes.get(i).withHour(Integer.parseInt(values[11])); // arrival Date is the same as departure date, so just change the hour and minute
-            		arrivalTimes.add(arr.withMinute(Integer.parseInt(values[12])));
-            		costs.add(Double.parseDouble(values[14]));
-            		durations.add(Duration.between(departureTimes.get(i), arrivalTimes.get(i)));
-            		originAirportCity.add(values[4].substring(1) + ", " + values[5].substring(0,values[5].length()-1)); // There were some extra " " in the csv file, so had to get rid of those
-            		destAirportCity.add(values[7].substring(1) + ", " + values[8].substring(0,values[8].length()-1)); 
-            		/*
+            		if (i % 10000 == 0) { 
+            			System.out.println("reading line " + i);
+            			
+            		}
+            		try {
+	            		originAirportIDs.add(Integer.parseInt(values[3].trim()));
+	            		destAirportIDs.add(Integer.parseInt(values[6]));
+	            		departureTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
+	            				Integer.parseInt(values[2]), Integer.parseInt(values[9]), Integer.parseInt(values[10])));
+	            		arrivalTimes.add(LocalDateTime.of(Integer.parseInt(values[0]), Integer.parseInt(values[1]),
+	            				Integer.parseInt(values[2]), Integer.parseInt(values[11]), Integer.parseInt(values[12])));
+	            		costs.add(Double.parseDouble(values[14]));
+	            		durations.add(Duration.between(departureTimes.get(i), arrivalTimes.get(i)));
+	            		originAirportCity.add(values[4].substring(1) + ", " + values[5].substring(0,values[5].length()-1)); // There were some extra " " in the csv file, so had to get rid of those
+	            		destAirportCity.add(values[7].substring(1) + ", " + values[8].substring(0,values[8].length()-1)); 
+            		} catch (Exception e){
+            			e.printStackTrace();
+            			System.out.println("Found error " + values[9] + " " + values[10]);
+            			break;
+            		}
+	            	/*
             		System.out.printf("year %s, month %s, day %2s, originAirportID %s, originAirportCity %-10s, originAirportState %s" 
             		+ " destAirportID %s, destAirportCity %-10s, destAirportState %s, dep_hour %s, dep_min %s, arr_hour %s, arr_min %s, distance %s, cost %s\n", 
             		values[0], values[1], values[2], values[3], values[4].substring(1), values[5].substring(0,values[5].length()-1), values[6], 
             		values[7].substring(1), values[8].substring(0,values[8].length()-1), values[9], values[10], values[11], values[12], values[13], values[14]);
 					*/
             		i++;
-            		if (i % 10000 == 0) System.out.println("reading line " + i);
+            		
+            		if (i > 583984) break; // We don't have more than 583985 lines of data
 	            }
 
 	        } catch (FileNotFoundException e) {
