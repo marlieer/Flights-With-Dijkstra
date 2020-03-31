@@ -160,6 +160,40 @@ public class ImportData {
 //		String [] deptDates = new String [] {"2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01","2019-01-01"};
 	}
 
+	public ArrayList<Integer> getOriginAirportIDs() {
+		return originAirportIDs;
+	}
+
+	public ArrayList<Integer> getDestAirportIDs() {
+		return destAirportIDs;
+	}
+
+	public ArrayList<LocalDateTime> getDepartureTimes() {
+		return departureTimes;
+	}
+
+	public ArrayList<LocalDateTime> getArrivalTimes() {
+		return arrivalTimes;
+	}
+
+	public ArrayList<Double> getCosts() {
+		return costs;
+	}
+
+	public ArrayList<Duration> getDurations() {
+		return durations;
+	}
+
+	public ArrayList<String> getOriginAirportCity() {
+		return originAirportCity;
+	}
+
+	public ArrayList<String> getDestAirportCity() {
+		return destAirportCity;
+	}
+
+	// getter methods
+	
 	
 }
 	
