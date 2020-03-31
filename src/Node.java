@@ -10,6 +10,7 @@ public class Node {
 	// attributes
 	private Integer airportID;
 	private LocalDateTime arrivalTime;
+	private LocalDateTime departureTime;
 	private Double cost;
 	private Duration duration;
 	
@@ -23,17 +24,19 @@ public class Node {
     // constructor
     public Node(int airportID) {
 
-    	// TODO: make duration MAX VALUE
+    	this.duration = Duration.ofDays(60);
     	this.cost = Double.MAX_VALUE;
     	this.airportID = airportID;
     	
     }
  
-    // methods
+    // adds an edge between nodes.
     public void addDestination(Node destination, double cost, double duration) {
         adjacentNodesCost.put(destination, cost);
         adjacentNodesDuration.put(destination, duration);
     }
+    
+    // TODO: method to calculate best flight between two nodes
  
      
     // getters and setters

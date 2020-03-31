@@ -3,10 +3,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.time.LocalDateTime;
 
 public class JProto1 {
 
 	public static void main(String[] args) {
+		
+		// example data from excel
+		
 		// create nodes with airport ID's
 		Node nodeA = new Node(1);
 		Node nodeB = new Node(2);
@@ -65,6 +69,7 @@ public class JProto1 {
 
 	}
 	
+	// currently calculates shortest path based only on cost (NOT duration)
 	public static List<Node> calculateShortestPathFromSource(Graph graph, Node source, Node dest) 
 	{
 	    source.setCost(0);
