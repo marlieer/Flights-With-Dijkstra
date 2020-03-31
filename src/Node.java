@@ -51,8 +51,8 @@ public class Node {
     	LocalDateTime srcArrivalTime = source.getArrivalTime();
     	LocalDateTime flightDepartureTime = source.getAdjacentNodesDuration().get(this)[0];
     	
-    	System.out.println(srcArrivalTime);
-    	System.out.println(flightDepartureTime);
+    	System.out.println(srcArrivalTime + ": src ID is " + source.getAirportID());
+    	System.out.println(flightDepartureTime + ": this ID is " + this.getAirportID());
     	
     	// if the flight leaves after the source node's arrival time, return cost. Else return infinite cost
     	if (!Duration.between(srcArrivalTime, flightDepartureTime).isNegative()) {
