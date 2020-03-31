@@ -73,6 +73,7 @@ public class JProto1 {
 	public static List<Node> calculateShortestPathFromSource(Graph graph, Node source, Node dest) 
 	{
 	    source.setCost(0);
+	    source.setArrivalTime(LocalDateTime.of(2019, 1, 1, 0, 0));
 	 
 	    Set<Node> settledNodes = new HashSet<>();
 	    Set<Node> unsettledNodes = new HashSet<>();
@@ -91,7 +92,19 @@ public class JProto1 {
 	                unsettledNodes.add(adjacentNode);
 	            }
 	        }
+	        
+	        // give current node an arrival time
+	        if (!currentNode.equals(source)) {
+	        	int indexOfLastNodeInShortestPath = currentNode.getShortestPath().size() - 1;
+		        Node lastNodeOnPathToCurrentNode = currentNode.getShortestPath().get(indexOfLastNodeInShortestPath);
+		        LocalDateTime arrivalTimeToCurrentNode = lastNodeOnPathToCurrentNode.getAdjacentNodesDuration().get(currentNode)[1];
+		        currentNode.setArrivalTime(arrivalTimeToCurrentNode);
+	        }
+	        
+	        
+	        // add current node to settled nodes
 	        settledNodes.add(currentNode);
+	       
 	        
 	        // if the node added is the destination node, return
 	        if (currentNode == dest) {
@@ -125,7 +138,7 @@ public class JProto1 {
 	    
 	    // If the path through source node is cheaper than evaluation node's cost, change evaluation node's cost
 	    // the flight must also be feasible (ie, edge must depart to evaluation node AFTER source's arrival time)
-	    if (sourceDistance + edgeWeight < evaluationNode.getCost()) {
+	    if (sourceDistance + edgeWeight < evaluationNode.getValidCost(sourceNode)) {
 	        evaluationNode.setCost(sourceDistance + edgeWeight);
 	        LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
 	        shortestPath.add(sourceNode);
