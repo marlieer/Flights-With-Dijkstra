@@ -21,18 +21,18 @@ public class JProto1 {
 		Node nodeG = new Node(7);
 		 
 		// add edges between nodes with cost and duration
-		nodeA.addDestination(nodeB, 10, 12);
-		nodeA.addDestination(nodeC, 15, 12);
+		nodeA.addDestination(nodeB, 10, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
+		nodeA.addDestination(nodeC, 15, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
-		nodeB.addDestination(nodeD, 12, 10);
-		nodeB.addDestination(nodeF, 15, 8);
+		nodeB.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
+		nodeB.addDestination(nodeF, 15, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
-		nodeC.addDestination(nodeE, 10, 8);
+		nodeC.addDestination(nodeE, 10, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
-		nodeD.addDestination(nodeE, 2, 3);
-		nodeD.addDestination(nodeF, 1, 4);
+		nodeD.addDestination(nodeE, 2, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
+		nodeD.addDestination(nodeF, 1, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
-		nodeF.addDestination(nodeE, 5, 2);
+		nodeF.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
 		// add nodes to the graph
 		Graph graph = new Graph();
@@ -122,6 +122,9 @@ public class JProto1 {
 	private static void CalculateMinimumCost(Node evaluationNode, Double edgeWeight, Node sourceNode) 
 	{
 	    Double sourceDistance = sourceNode.getCost();
+	    
+	    // If the path through source node is cheaper than evaluation node's cost, change evaluation node's cost
+	    // the flight must also be feasible (ie, edge must depart to evaluation node AFTER source's arrival time)
 	    if (sourceDistance + edgeWeight < evaluationNode.getCost()) {
 	        evaluationNode.setCost(sourceDistance + edgeWeight);
 	        LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());

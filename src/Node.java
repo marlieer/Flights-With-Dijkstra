@@ -39,7 +39,9 @@ public class Node {
         adjacentNodesDuration.put(destination, arrdepttimes);
     }
     
-    // TODO: method to calculate best flight between two nodes
+    // TODO: method to calculate best flight between this node and an adjacent node
+    // probably use adjacentNodesDuration. Return single edge
+  
  
      
     // getters and setters
