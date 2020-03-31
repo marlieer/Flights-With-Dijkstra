@@ -45,9 +45,23 @@ public class Node {
  
      
     // getters and setters
+    public double getValidCost(Node source) {
+    	
+    	// get source's settled arrival time and edge's arrival and departure time
+    	LocalDateTime srcArrivalTime = source.getArrivalTime();
+    	LocalDateTime flightDepartureTime = source.getAdjacentNodesDuration().get(source)[0];
+    	
+    	// if the flight leaves after the source node's arrival time, return cost. Else return infinite cost
+    	if (!Duration.between(srcArrivalTime, flightDepartureTime).isNegative()) {
+    		return this.cost;
+    	} else return Double.MAX_VALUE;
+    	
+    }
+    
     public double getCost() {
     	return this.cost;
     }
+    
     public void setCost(double cost) {
     	this.cost = cost;
     }
