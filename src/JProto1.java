@@ -47,7 +47,7 @@ public class JProto1 {
 		
 		// run Dijkstra's on source nodeA with dest nodeG
 		Node src = nodeA;
-		Node dest = nodeF;
+		Node dest = nodeG;
 		List<Node> shortestPath = calculateShortestPathFromSource(graph, src, dest);
 		
 		

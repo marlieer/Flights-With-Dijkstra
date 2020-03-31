@@ -19,7 +19,9 @@ public class Node {
      
      
     Map<Node, Double> adjacentNodesCost = new HashMap<>();
-    Map<Node, Double> adjacentNodesDuration = new HashMap<>();
+    
+    // LocalDateTime [] stores an edge's departure and arrival time in that order
+    Map<Node, LocalDateTime []> adjacentNodesDuration = new HashMap<>();
     
     // constructor
     public Node(int airportID) {
@@ -31,9 +33,10 @@ public class Node {
     }
  
     // adds an edge between nodes.
-    public void addDestination(Node destination, double cost, double duration) {
+    public void addDestination(Node destination, double cost, LocalDateTime arrival, LocalDateTime departure) {
         adjacentNodesCost.put(destination, cost);
-        adjacentNodesDuration.put(destination, duration);
+        LocalDateTime [] arrdepttimes = new LocalDateTime [] {departure, arrival};
+        adjacentNodesDuration.put(destination, arrdepttimes);
     }
     
     // TODO: method to calculate best flight between two nodes
@@ -66,12 +69,28 @@ public class Node {
     	this.adjacentNodesCost = adjacentNodesCost;
     }
     
-    public Map<Node, Double> getAdjacentNodesDuration() {
+    public Map<Node, LocalDateTime []> getAdjacentNodesDuration() {
     	return this.adjacentNodesDuration;
     }
     
-    public void setAdjacentNodesDuration(Map<Node, Double> adjacentNodesDuration) {
+    public void setAdjacentNodesDuration(Map<Node, LocalDateTime []> adjacentNodesDuration) {
     	this.adjacentNodesDuration = adjacentNodesDuration;
     }
+
+	public LocalDateTime getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public void setArrivalTime(LocalDateTime arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	public LocalDateTime getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(LocalDateTime departureTime) {
+		this.departureTime = departureTime;
+	}
 }
 
