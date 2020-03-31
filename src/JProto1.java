@@ -92,19 +92,18 @@ public class JProto1 {
 	                unsettledNodes.add(adjacentNode);
 	            }
 	            
-	            // give current node an arrival time
+	            // give adjacent node an arrival time
     	        if (!adjacentNode.equals(source)) {
     	        	int indexOfLastNodeInShortestPath = adjacentNode.getShortestPath().size() - 1;
-    		        Node lastNodeOnPathToCurrentNode = adjacentNode.getShortestPath().get(indexOfLastNodeInShortestPath);
-    		        LocalDateTime arrivalTimeToCurrentNode = lastNodeOnPathToCurrentNode.getAdjacentNodesDuration().get(adjacentNode)[1];
-    		        adjacentNode.setArrivalTime(arrivalTimeToCurrentNode);
+    		        Node lastNodeOnPathToAdjacentNode = adjacentNode.getShortestPath().get(indexOfLastNodeInShortestPath);
+    		        LocalDateTime arrivalTimeToAdjacentNode = lastNodeOnPathToAdjacentNode.getAdjacentNodesDuration().get(adjacentNode)[1];
+    		        adjacentNode.setArrivalTime(arrivalTimeToAdjacentNode);
     	        }
 	        }
 	        
 	        
 	        // add current node to settled nodes
 	        settledNodes.add(currentNode);
-	        System.out.println("Adding node to settled nodes: " + currentNode.getAirportID());
 	       
 	        
 	        // if the node added is the destination node, return

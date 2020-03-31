@@ -39,11 +39,7 @@ public class Node {
         adjacentNodesDuration.put(destination, arrdepttimes);
     }
     
-    // TODO: method to calculate best flight between this node and an adjacent node
-    // probably use adjacentNodesDuration. Return single edge
-  
- 
-     
+    
     // getters and setters
     public double getValidCost(Node source) {
     	
@@ -51,15 +47,8 @@ public class Node {
     	LocalDateTime srcArrivalTime = source.getArrivalTime();
     	LocalDateTime flightDepartureTime = source.getAdjacentNodesDuration().get(this)[0];
     	
-    	System.out.println(srcArrivalTime + ": src ID is " + source.getAirportID());
-    	System.out.println(flightDepartureTime + ": this ID is " + this.getAirportID());
-    	
     	// if the flight leaves after the source node's arrival time, return cost. Else return infinite cost
-    	Duration between = Duration.between(srcArrivalTime, flightDepartureTime);
-    	System.out.println(between);
-    	
     	if (!Duration.between(srcArrivalTime, flightDepartureTime).isNegative()) {
-    		System.out.println("valid");
     		return this.cost;
     	} else {
     		source.getAdjacentNodesCost().replace(this, Double.MAX_VALUE);
