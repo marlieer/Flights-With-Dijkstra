@@ -92,7 +92,7 @@ public class JProto1 {
 	                unsettledNodes.add(adjacentNode);
 	            }
 	            
-	         // give current node an arrival time
+	            // give current node an arrival time
     	        if (!adjacentNode.equals(source)) {
     	        	int indexOfLastNodeInShortestPath = adjacentNode.getShortestPath().size() - 1;
     		        Node lastNodeOnPathToCurrentNode = adjacentNode.getShortestPath().get(indexOfLastNodeInShortestPath);

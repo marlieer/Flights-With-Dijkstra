@@ -55,9 +55,16 @@ public class Node {
     	System.out.println(flightDepartureTime + ": this ID is " + this.getAirportID());
     	
     	// if the flight leaves after the source node's arrival time, return cost. Else return infinite cost
+    	Duration between = Duration.between(srcArrivalTime, flightDepartureTime);
+    	System.out.println(between);
+    	
     	if (!Duration.between(srcArrivalTime, flightDepartureTime).isNegative()) {
+    		System.out.println("valid");
     		return this.cost;
-    	} else return Double.MAX_VALUE;
+    	} else {
+    		source.getAdjacentNodesCost().replace(this, Double.MAX_VALUE);
+    		return -Double.MAX_VALUE;
+    	}
     	
     }
     
