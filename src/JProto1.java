@@ -22,6 +22,7 @@ public class JProto1 {
 		 
 		
 		nodeE.addDestination(nodeA, 2, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
+		nodeB.addDestination(nodeE, 8, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
 		nodeB.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 2, 20, 0), LocalDateTime.of(2020, 1, 2, 22, 0));
 		 
 		nodeC.addDestination(nodeF, 13, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
@@ -46,6 +47,7 @@ public class JProto1 {
 		nodeA.addDestination(nodeB, 11, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		nodeA.addDestination(nodeC, 15, LocalDateTime.of(2020, 1, 13, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
 		 
+		
 		nodeB.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 12, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
 		nodeB.addDestination(nodeF, 15, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 8, 2, 0));
 		 
@@ -58,7 +60,7 @@ public class JProto1 {
 		
 		// more
 		nodeE.addDestination(nodeA, 3, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
-		nodeB.addDestination(nodeE, 8, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
+		
 		 
 		nodeC.addDestination(nodeF, 18, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		 
@@ -66,8 +68,7 @@ public class JProto1 {
 		nodeE.addDestination(nodeD, 2, LocalDateTime.of(2020, 1, 2, 6, 0), LocalDateTime.of(2020, 1, 2, 8, 0));
 		 
 		nodeF.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
-		
-//		// parallel flights
+	
 		
 		 
 		// add nodes to the graph
@@ -82,8 +83,8 @@ public class JProto1 {
 		graph.addNode(nodeG);
 		
 		// run Dijkstra's on source nodeA with dest nodeG
-		Node src = nodeA;
-		Node dest = nodeF;
+		Node src = nodeC;
+		Node dest = nodeD;
 		List<Node> shortestPath = calculateShortestPathFromSource(graph, src, dest);
 		
 		
@@ -119,20 +120,25 @@ public class JProto1 {
 	    while (unsettledNodes.size() != 0) {
 	        Node currentNode = getLowestCostNode(unsettledNodes);
 	        unsettledNodes.remove(currentNode);
-	        for (Entry < Node, Double> adjacencyPair: 
+	        System.out.println("Current Node: " + currentNode.getAirportID());
+	        for (Entry < Node, List<Double>> adjacencyPair: 
 	          currentNode.getAdjacentNodesCost().entrySet()) {
 	            Node adjacentNode = adjacencyPair.getKey();
-	            Double edgeWeight = adjacencyPair.getValue();
+	            
+	            // if there are parallel flights, node should just return the best flight
+	            List<Double> edgeWeights = adjacencyPair.getValue();
+	            System.out.println("Edge cost: " + edgeWeights + ". Adjacent Node: " + adjacentNode.getAirportID());
 	            if (!settledNodes.contains(adjacentNode)) {
-	                CalculateMinimumCost(adjacentNode, edgeWeight, currentNode);
+	                CalculateMinimumCost(adjacentNode, edgeWeights, currentNode);
 	                unsettledNodes.add(adjacentNode);
 	            }
 	            
 	            // give adjacent node an arrival time
-    	        if (!adjacentNode.equals(source)) {
+    	        if (!adjacentNode.equals(source) && adjacentNode.getShortestPath().size() > 0) {
     	        	int indexOfLastNodeInShortestPath = adjacentNode.getShortestPath().size() - 1;
     		        Node lastNodeOnPathToAdjacentNode = adjacentNode.getShortestPath().get(indexOfLastNodeInShortestPath);
-    		        LocalDateTime arrivalTimeToAdjacentNode = lastNodeOnPathToAdjacentNode.getAdjacentNodesDuration().get(adjacentNode)[1];
+    		        int indexOfBestParallelFlight = lastNodeOnPathToAdjacentNode.getIndexOfBestParallelFlight(adjacentNode);
+    		        LocalDateTime arrivalTimeToAdjacentNode = lastNodeOnPathToAdjacentNode.getAdjacentNodesDuration().get(adjacentNode).get(indexOfBestParallelFlight)[1];
     		        adjacentNode.setArrivalTime(arrivalTimeToAdjacentNode);
     	        }
 	        }
@@ -140,7 +146,7 @@ public class JProto1 {
 	        
 	        // add current node to settled nodes
 	        settledNodes.add(currentNode);
-	       
+	        System.out.println(currentNode.getArrivalTime());
 	        
 	        // if the node added is the destination node, return
 	        if (currentNode == dest) {
@@ -168,18 +174,35 @@ public class JProto1 {
 	}
 	
 	
-	private static void CalculateMinimumCost(Node evaluationNode, Double edgeWeight, Node sourceNode) 
+	private static void CalculateMinimumCost(Node evaluationNode, List<Double> edgeWeights, Node sourceNode) 
 	{
 	    Double sourceDistance = sourceNode.getCost();
 	    
-	    // If the path through source node is cheaper than evaluation node's cost, change evaluation node's cost
-	    // the flight must also be feasible (ie, edge must depart to evaluation node AFTER source's arrival time)
-	    if (sourceDistance + edgeWeight < evaluationNode.getValidCost(sourceNode)) {
-	        evaluationNode.setCost(sourceDistance + edgeWeight);
-	        LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-	        shortestPath.add(sourceNode);
-	        evaluationNode.setShortestPath(shortestPath);
+	    
+	    // loop through all edge weights. Find best cost feasible edge weight
+	    for(int i =0; i<edgeWeights.size(); i++) {
+	    	// If the path through source node is cheaper than evaluation node's cost, change evaluation node's cost
+		    // the flight must also be feasible (ie, edge must depart to evaluation node AFTER source's arrival time)
+		    if (sourceDistance + edgeWeights.get(i) < evaluationNode.getValidCost(sourceNode, i)) {
+		    	
+		        evaluationNode.setCost(sourceDistance + edgeWeights.get(i));
+		        LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+		        sourceNode.setIndexOfBestParallelFlight(evaluationNode, i);
+		        
+		        if (!shortestPath.contains(sourceNode)) {
+		        	shortestPath.add(sourceNode);
+			        evaluationNode.setShortestPath(shortestPath);
+		        }
+		        
+		    }
+		    
 	    }
+	    
+	    System.out.println("Index of Best Flight between " + sourceNode.getAirportID() + " and " + evaluationNode.getAirportID() + ": " + sourceNode.getIndexOfBestParallelFlight(evaluationNode));
+	    
+	    
+	    
+	    
 	}
 
 }
