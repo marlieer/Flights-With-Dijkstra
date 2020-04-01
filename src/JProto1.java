@@ -1,15 +1,53 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class JProto1 {
+	
+	/************
+	 * TODO:
+	 * 1. Integrate ImportData into this algorithm. How to access attributes are described line 23-46
+	 * 
+	 */
 
 	public static void main(String[] args) {
 		
-		// example data from excel
+		// import data from excel
+		ImportData data = new ImportData("flight_data.csv");
+		/*
+		 * How to access attributes in data for the first flight:
+		 * 
+		int originAirportID_0 = data.getOriginAirportIDs().get(0);
+		int destAirportID_0 = data.getDestAirportIDs().get(0);
+		LocalDateTime departureTime_0 = data.getDepartureTimes().get(0);
+		LocalDateTime arrivalTime_0 = data.getArrivalTimes().get(0);
+		double costFlight_0 = data.getCosts().get(0);
+		Duration durationFlight_0 = data.getDurations().get(0);
+		String originAirportCity_0 = data.getOriginAirportCity().get(0);
+		String destAirportCity_0 = data.getDestAirportCity().get(0);
+		
+		 * How to compare two LocalDateTimes:
+		 * 
+		 * If LocalDateTime dt2 is after LocalDateTime dt1, then
+		 * dt2.compareTo(dt1) returns +1
+		 * dt1.compareTo(dt2) returns -1
+		 * 
+		 * You can also use: 
+		 * Duration.between(dt1,dt2) -> returns positive Duration
+		 * Duration.between(dt2,dt1) -> returns negative Duration
+		 * 
+		 * Duration will have some output like PT10H10M10S. That means there is 10 hours, 10 minutes, and 10 
+		 * seconds between the two LocalDateTime values. You can extract individual values with the methods
+		 * toDays(), toHours(), toMinutes()
+		 */
+		
+		
+		
 		
 		// create nodes with airport ID's
 		Node nodeA = new Node(1);
