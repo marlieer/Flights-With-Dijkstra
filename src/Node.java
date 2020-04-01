@@ -40,7 +40,7 @@ public class Node {
     }
     
     
-    // getters and setters
+    // returns cost only if flight is valid. Otherwise returns -infinity and sets edge cost to infinity
     public double getValidCost(Node source) {
     	
     	// get source's settled arrival time and edge's arrival and departure time

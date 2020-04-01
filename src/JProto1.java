@@ -20,8 +20,30 @@ public class JProto1 {
 		Node nodeF = new Node(6);
 		Node nodeG = new Node(7);
 		 
+		
+		nodeE.addDestination(nodeA, 2, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
+		nodeB.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 2, 20, 0), LocalDateTime.of(2020, 1, 2, 22, 0));
+		 
+		nodeC.addDestination(nodeF, 13, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
+		
+		nodeE.addDestination(nodeA, 6, LocalDateTime.of(2020, 1, 3, 8, 0), LocalDateTime.of(2020, 1, 3, 12, 0));
+		nodeB.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
+		 
+		nodeC.addDestination(nodeF, 11, LocalDateTime.of(2020, 1, 1, 7, 0), LocalDateTime.of(2020, 1, 1, 10, 0));
+		 
+		nodeD.addDestination(nodeB, 4, LocalDateTime.of(2020, 1, 4, 6, 0), LocalDateTime.of(2020, 1, 4, 8, 0));
+		
+		nodeC.addDestination(nodeE, 14, LocalDateTime.of(2020, 1, 2, 3, 0), LocalDateTime.of(2020, 1, 2, 5, 0));
+		 
+		nodeD.addDestination(nodeE, 4, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
+		nodeD.addDestination(nodeF, 5, LocalDateTime.of(2020, 1, 4, 12, 0), LocalDateTime.of(2020, 1, 4, 12, 0));
+		 
+		nodeF.addDestination(nodeE, 7, LocalDateTime.of(2020, 1, 4, 0, 0), LocalDateTime.of(2020, 1, 4, 2, 0));
+		
+		
 		// add edges between nodes with cost and duration
-		nodeA.addDestination(nodeB, 10, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
+		nodeA.addDestination(nodeB, 10, LocalDateTime.of(2020, 1, 1, 4, 0), LocalDateTime.of(2020, 1, 1, 6, 0));
+		nodeA.addDestination(nodeB, 11, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
 		nodeA.addDestination(nodeC, 15, LocalDateTime.of(2020, 1, 13, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
 		 
 		nodeB.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 12, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
@@ -33,6 +55,20 @@ public class JProto1 {
 		nodeD.addDestination(nodeF, 1, LocalDateTime.of(2020, 1, 7, 0, 0), LocalDateTime.of(2020, 1, 8, 2, 0));
 		 
 		nodeF.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 15, 0, 0), LocalDateTime.of(2020, 1, 16, 2, 0));
+		
+		// more
+		nodeE.addDestination(nodeA, 3, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
+		nodeB.addDestination(nodeE, 8, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
+		 
+		nodeC.addDestination(nodeF, 18, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
+		 
+		nodeD.addDestination(nodeB, 5, LocalDateTime.of(2020, 1, 4, 4, 0), LocalDateTime.of(2020, 1, 4, 16, 0));
+		nodeE.addDestination(nodeD, 2, LocalDateTime.of(2020, 1, 2, 6, 0), LocalDateTime.of(2020, 1, 2, 8, 0));
+		 
+		nodeF.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
+		
+//		// parallel flights
+		
 		 
 		// add nodes to the graph
 		Graph graph = new Graph();
