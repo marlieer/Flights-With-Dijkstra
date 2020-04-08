@@ -77,7 +77,7 @@ public class Node {
     	
     	// if the flight leaves after the source node's arrival time, return cost. Else return infinite cost
     	if (!Duration.between(srcArrivalTime, flightDepartureTime.get(index)[0]).isNegative()) {
-    		System.out.println("Valid Edge for index " + index);
+    		//System.out.println("Valid Edge for index " + index);
     		return this.cost;
     	} else {
     		
@@ -85,7 +85,7 @@ public class Node {
     		List<Double> infinityCosts = source.getAdjacentNodesCost().get(this);
     		infinityCosts.set(index, Double.MAX_VALUE);
     		source.getAdjacentNodesCost().replace(this, infinityCosts);
-    		System.out.println("Invalid Edge for index " + index);
+    		//System.out.println("Invalid Edge for index " + index);
     		return -Double.MAX_VALUE;
     	}
     	

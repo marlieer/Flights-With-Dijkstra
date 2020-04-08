@@ -18,7 +18,7 @@ public class JProto1 {
 	public static void main(String[] args) {
 		
 		// import data from excel
-		ImportData data = new ImportData("flight_data.csv");
+		//ImportData data = new ImportData("flight_data.csv");
 		// Can also use:
 		// ImportData data = new ImportData("flight_data.csv",25); // only reads in 25 data points
 		/*
@@ -48,85 +48,55 @@ public class JProto1 {
 		 * toDays(), toHours(), toMinutes()
 		 */
 		
+		// Measuring execution time:
+		long start = System.nanoTime();
 		
+		// Creating nodes from ImportData:
+		int dataSize = 500000;
+		boolean add = true;
+		ImportData data = new ImportData("flight_data.csv", dataSize);
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		for(int i = 0; i < dataSize - 1; i++) {
+			int id = data.getOriginAirportIDs().get(i);
+			for(int j = 0; j < nodes.size(); j++) {
+				if(nodes.get(j).getAirportID() == id) {
+					add = false;
+				}
+			}
+			if(add) {
+				nodes.add(new Node(id));
+				//System.out.println("Node added: " + id);
+			}
+			add = true;
+		}
 		
+		// Adding data to nodes:
+		for(int i = 0; i < dataSize - 1; i++) {
+			int id = data.getOriginAirportIDs().get(i);
+			for(int j = 0; j < nodes.size(); j++) {
+				if(nodes.get(j).getAirportID() == id) {
+					int destID = data.getDestAirportIDs().get(i);
+					for(int k = 0; k < nodes.size(); k++) {
+						if(nodes.get(k).getAirportID() == destID) {
+							nodes.get(j).addDestination(nodes.get(k), data.getCosts().get(i), data.getDepartureTimes().get(i), data.getArrivalTimes().get(i));
+							//System.out.println("Flight added from " + id + " to " + destID);
+						}
+					}
+				}
+			}
+		}
 		
-		// create nodes with airport ID's
-		Node nodeA = new Node(1);
-		Node nodeB = new Node(2);
-		Node nodeC = new Node(3);
-		Node nodeD = new Node(4); 
-		Node nodeE = new Node(5);
-		Node nodeF = new Node(6);
-		Node nodeG = new Node(7);
-		 
-		
-		nodeE.addDestination(nodeA, 2, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
-		nodeB.addDestination(nodeE, 8, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
-		nodeB.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 2, 20, 0), LocalDateTime.of(2020, 1, 2, 22, 0));
-		 
-		nodeC.addDestination(nodeF, 13, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
-		
-		nodeE.addDestination(nodeA, 6, LocalDateTime.of(2020, 1, 3, 8, 0), LocalDateTime.of(2020, 1, 3, 12, 0));
-		nodeB.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 2, 6, 0));
-		 
-		nodeC.addDestination(nodeF, 11, LocalDateTime.of(2020, 1, 1, 7, 0), LocalDateTime.of(2020, 1, 1, 10, 0));
-		 
-		nodeD.addDestination(nodeB, 4, LocalDateTime.of(2020, 1, 4, 6, 0), LocalDateTime.of(2020, 1, 4, 8, 0));
-		
-		nodeC.addDestination(nodeE, 14, LocalDateTime.of(2020, 1, 2, 3, 0), LocalDateTime.of(2020, 1, 2, 5, 0));
-		 
-		nodeD.addDestination(nodeE, 4, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
-		nodeD.addDestination(nodeF, 5, LocalDateTime.of(2020, 1, 4, 12, 0), LocalDateTime.of(2020, 1, 4, 12, 0));
-		 
-		nodeF.addDestination(nodeE, 7, LocalDateTime.of(2020, 1, 4, 0, 0), LocalDateTime.of(2020, 1, 4, 2, 0));
-		
-		
-		// add edges between nodes with cost and duration
-		nodeA.addDestination(nodeB, 10, LocalDateTime.of(2020, 1, 1, 4, 0), LocalDateTime.of(2020, 1, 1, 6, 0));
-		nodeA.addDestination(nodeB, 11, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
-		nodeA.addDestination(nodeC, 15, LocalDateTime.of(2020, 1, 13, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
-		 
-		
-		nodeB.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 12, 0, 0), LocalDateTime.of(2020, 1, 13, 2, 0));
-		nodeB.addDestination(nodeF, 15, LocalDateTime.of(2020, 1, 2, 0, 0), LocalDateTime.of(2020, 1, 8, 2, 0));
-		 
-		nodeC.addDestination(nodeE, 10, LocalDateTime.of(2020, 1, 18, 0, 0), LocalDateTime.of(2020, 1, 19, 2, 0));
-		 
-		nodeD.addDestination(nodeE, 2, LocalDateTime.of(2020, 1, 20, 0, 0), LocalDateTime.of(2020, 1, 21, 2, 0));
-		nodeD.addDestination(nodeF, 1, LocalDateTime.of(2020, 1, 7, 0, 0), LocalDateTime.of(2020, 1, 8, 2, 0));
-		 
-		nodeF.addDestination(nodeE, 5, LocalDateTime.of(2020, 1, 15, 0, 0), LocalDateTime.of(2020, 1, 16, 2, 0));
-		
-		// more
-		nodeE.addDestination(nodeA, 3, LocalDateTime.of(2020, 1, 3, 0, 0), LocalDateTime.of(2020, 1, 3, 2, 0));
-		
-		 
-		nodeC.addDestination(nodeF, 18, LocalDateTime.of(2020, 1, 1, 0, 0), LocalDateTime.of(2020, 1, 1, 2, 0));
-		 
-		nodeD.addDestination(nodeB, 5, LocalDateTime.of(2020, 1, 4, 4, 0), LocalDateTime.of(2020, 1, 4, 16, 0));
-		nodeE.addDestination(nodeD, 2, LocalDateTime.of(2020, 1, 2, 6, 0), LocalDateTime.of(2020, 1, 2, 8, 0));
-		 
-		nodeF.addDestination(nodeD, 12, LocalDateTime.of(2020, 1, 1, 18, 0), LocalDateTime.of(2020, 1, 1, 20, 0));
-	
-		
-		 
-		// add nodes to the graph
+		// Adding nodes to graph:
 		Graph graph = new Graph();
-		 
-		graph.addNode(nodeA);
-		graph.addNode(nodeB);
-		graph.addNode(nodeC);
-		graph.addNode(nodeD);
-		graph.addNode(nodeE);
-		graph.addNode(nodeF);
-		graph.addNode(nodeG);
+		for(int i = 0; i < nodes.size(); i++) {
+			graph.addNode(nodes.get(i));
+			//System.out.println("Node added to graph.");
+		}
 		
-		// run Dijkstra's on source nodeA with dest nodeG
-		Node src = nodeC;
-		Node dest = nodeD;
+		// Running modified Dijkstra's algorithm from 'src' to 'dest':
+		Node src = nodes.get(0);
+		Node dest = nodes.get(5);
 		List<Node> shortestPath = calculateShortestPathFromSource(graph, src, dest);
-		
 		
 		if (shortestPath != null) {
 			
@@ -143,6 +113,10 @@ public class JProto1 {
 			System.out.println("No shortest path found");
 		}
 		
+		// Printing execution time:
+		long finish = System.nanoTime();
+		long executionTime = finish - start;
+		System.out.println("Execution Time: " + executionTime / 1000000 + "ms");
 
 	}
 	
@@ -160,14 +134,14 @@ public class JProto1 {
 	    while (unsettledNodes.size() != 0) {
 	        Node currentNode = getLowestCostNode(unsettledNodes);
 	        unsettledNodes.remove(currentNode);
-	        System.out.println("Current Node: " + currentNode.getAirportID());
+	        //System.out.println("Current Node: " + currentNode.getAirportID());
 	        for (Entry < Node, List<Double>> adjacencyPair: 
 	          currentNode.getAdjacentNodesCost().entrySet()) {
 	            Node adjacentNode = adjacencyPair.getKey();
 	            
 	            // if there are parallel flights, node should just return the best flight
 	            List<Double> edgeWeights = adjacencyPair.getValue();
-	            System.out.println("Edge cost: " + edgeWeights + ". Adjacent Node: " + adjacentNode.getAirportID());
+	            //System.out.println("Edge cost: " + edgeWeights + ". Adjacent Node: " + adjacentNode.getAirportID());
 	            if (!settledNodes.contains(adjacentNode)) {
 	                CalculateMinimumCost(adjacentNode, edgeWeights, currentNode);
 	                unsettledNodes.add(adjacentNode);
@@ -186,7 +160,7 @@ public class JProto1 {
 	        
 	        // add current node to settled nodes
 	        settledNodes.add(currentNode);
-	        System.out.println(currentNode.getArrivalTime());
+	        //System.out.println(currentNode.getArrivalTime());
 	        
 	        // if the node added is the destination node, return
 	        if (currentNode == dest) {
@@ -238,7 +212,7 @@ public class JProto1 {
 		    
 	    }
 	    
-	    System.out.println("Index of Best Flight between " + sourceNode.getAirportID() + " and " + evaluationNode.getAirportID() + ": " + sourceNode.getIndexOfBestParallelFlight(evaluationNode));
+	    //System.out.println("Index of Best Flight between " + sourceNode.getAirportID() + " and " + evaluationNode.getAirportID() + ": " + sourceNode.getIndexOfBestParallelFlight(evaluationNode));
 	    
 	    
 	    
