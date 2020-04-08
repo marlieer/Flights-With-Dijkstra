@@ -28,7 +28,7 @@ public class ImportData {
 	*/
 	
 	public static void main(String[] args) {
-		ImportData data = new ImportData("flight_data.csv");
+		ImportData data = new ImportData("flight_data.csv",25);
 		System.out.println("Finished reading in data");
 		System.out.println ("\nFirst 10 lines: ");
 		for (int j = 0; j < 10; j++) {
@@ -40,8 +40,13 @@ public class ImportData {
 		}
 	}
 	
-	// constructor
+	// overloading constructor
 	public ImportData(String filepath) {
+		this(filepath, null);
+	}
+	
+	// overloading constructor
+	public ImportData(String filepath, Integer numDataPoints) {
 		originAirportIDs = new ArrayList<Integer>();
 		destAirportIDs = new ArrayList<Integer>();
 		departureTimes = new ArrayList<LocalDateTime>();
@@ -61,6 +66,7 @@ public class ImportData {
 	            br = new BufferedReader(new FileReader(csvFile));
 	            br.readLine(); // Skip the first line because it's just headers
 	            int i = 0;
+	            int stoppingCondition = (int) (numDataPoints == null? -Math.pow(2,  31): numDataPoints);
 	            while ((line = br.readLine()) != null) {
 	            		
             		// use comma as separator
@@ -132,6 +138,9 @@ public class ImportData {
             		values[7].substring(1), values[8].substring(0,values[8].length()-1), values[9], values[10], values[11], values[12], values[13], values[14]);
 					*/
             		i++;
+            		if (i == stoppingCondition - 1) { // if have a stoppingCondition, then only read in the numDataPoints given
+            			break;
+            		}
 	            }
 
 	        } catch (FileNotFoundException e) {
