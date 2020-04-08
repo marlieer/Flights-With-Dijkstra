@@ -19,6 +19,8 @@ public class JProto1 {
 		
 		// import data from excel
 		ImportData data = new ImportData("flight_data.csv");
+		// Can also use:
+		// ImportData data = new ImportData("flight_data.csv",25); // only reads in 25 data points
 		/*
 		 * How to access attributes in data for the first flight:
 		 * 
